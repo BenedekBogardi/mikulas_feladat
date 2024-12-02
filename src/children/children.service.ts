@@ -1,26 +1,57 @@
 import { Injectable } from '@nestjs/common';
 import { CreateChildDto } from './dto/create-child.dto';
 import { UpdateChildDto } from './dto/update-child.dto';
+import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class ChildrenService {
+  db: PrismaService
+
+  constructor(db: PrismaService) {
+    this.db = db;
+  }
   create(createChildDto: CreateChildDto) {
-    return 'This action adds a new child';
+    return this.db.child.create({
+      data: createChildDto
+    })
   }
 
   findAll() {
-    return `This action returns all children`;
+    return this.db.child.findMany()
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} child`;
+    return this.db.child.findUnique({
+      where: {
+        id
+      }
+    })
   }
 
-  update(id: number, updateChildDto: UpdateChildDto) {
-    return `This action updates a #${id} child`;
+  async update(id: number, updateChildDto: UpdateChildDto) {
+    try{
+      return await this.db.child.update({
+        where: {
+          id
+        },
+        data: updateChildDto
+      });
+    }
+    catch{
+      return undefined
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} child`;
+  async remove(id: number) {
+    try{
+      return await this.db.child.delete({
+        where: {
+          id
+        }
+      })
+    }
+    catch{
+      return undefined
+    }
   }
 }

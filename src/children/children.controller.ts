@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException } from '@nestjs/common';
 import { ChildrenService } from './children.service';
 import { CreateChildDto } from './dto/create-child.dto';
 import { UpdateChildDto } from './dto/update-child.dto';
@@ -18,17 +18,26 @@ export class ChildrenController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.childrenService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    const child = await this.childrenService.findOne(+id);
+    if (!child) throw new NotFoundException('No child with ID ' + id);
+
+    return child;
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateChildDto: UpdateChildDto) {
-    return this.childrenService.update(+id, updateChildDto);
+  async update(@Param('id') id: string, @Body() updateChildDto: UpdateChildDto) {
+    const child = await this.childrenService.update(+id, updateChildDto);
+    if (!child) throw new NotFoundException('No child with ID ' + id);
+
+    return child;
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.childrenService.remove(+id);
+  async remove(@Param('id') id: string) {
+    const success = await this.childrenService.remove(+id);
+    if (!success) {
+      throw new NotFoundException('No child with ID ' + id);
+    }
   }
 }
