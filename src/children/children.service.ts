@@ -54,4 +54,12 @@ export class ChildrenService {
       return undefined
     }
   }
+  async addToyToChild(toyId: number, childId: number){
+    return await this.db.toyList.create({
+      data: {
+        toyId,
+        childId
+      }
+    })
+  }
 }
