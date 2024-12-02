@@ -44,7 +44,7 @@ export class ChildrenController {
   @Put(':id/toys/:toyId')
   async addToyToChild(@Param('id') id: number, @Param('toyId') toyId: number, ){
     try{
-      return await this.childrenService.addToyToChild(toyId, id);
+      return await this.childrenService.addToyToChild(+toyId, +id);
     }
     catch{
       return undefined;
