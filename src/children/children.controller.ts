@@ -50,4 +50,13 @@ export class ChildrenController {
       return undefined;
     }
   }
+  @Delete(':id/toys/:toyId')
+  async deleteToyToChild(@Param('id') id: number, @Param('toyId') toyId: number, ){
+    try{
+      return await this.childrenService.deleteToyFromChild(+toyId, +id);
+    }
+    catch{
+      return undefined;
+    }
+  }
 }

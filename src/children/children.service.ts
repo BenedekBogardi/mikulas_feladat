@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateChildDto } from './dto/create-child.dto';
 import { UpdateChildDto } from './dto/update-child.dto';
 import { PrismaService } from 'src/prisma.service';
+
 
 @Injectable()
 export class ChildrenService {
@@ -38,7 +39,7 @@ export class ChildrenService {
       });
     }
     catch{
-      return undefined
+      throw new NotFoundException
     }
   }
 
@@ -51,7 +52,7 @@ export class ChildrenService {
       })
     }
     catch{
-      return undefined
+      throw new NotFoundException
     }
   }
   async addToyToChild(toyId: number, childId: number){
@@ -61,5 +62,20 @@ export class ChildrenService {
         childId
       }
     })
+  }
+  async deleteToyFromChild(toyId: number, childId: number){
+    try{
+      await this.db.toyList.delete({
+        where: {
+          toyId_childId: {
+            childId: childId,
+            toyId: toyId
+          }
+        }
+      })
+    }catch{
+      throw new NotFoundException
+    }
+    
   }
 }
