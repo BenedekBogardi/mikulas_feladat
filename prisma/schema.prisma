@@ -17,7 +17,7 @@ model Toy {
   id Int @id @default(autoincrement())
   name String
   material String
-  weight Int
+  weight Float
   children toyList[]
 }
 
